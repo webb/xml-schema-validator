@@ -32,6 +32,7 @@ install_files = ${all_files:${all_dir}/%=${prefix}/%}
 
 gradle_build_dir = tmp/gradle-build
 jars_tar = ${gradle_build_dir}/distributions/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar
+override jars_tar_abs = ${shell mkdir -p ${dir ${jars_tar}} && cd ${dir ${jars_tar}} && pwd}/${notdir ${jars_tar}}
 
 installed_jars_token = tmp/tokens/installed-jars
 
@@ -45,12 +46,6 @@ m4_command = ${m4} -P \
 default: all
 
 .SECONDARY:
-
-.PHONY: test
-test:
-	echo here = ${pwd} or ${PWD} or $$PWD
-	cd tmp && echo here = ${PWD}
-	printf 'src_files=%s\n' ${src_files}
 
 #############################################################################
 
@@ -104,7 +99,7 @@ install: ${install_files} install-jars
 .PHONY: install-jars
 install-jars: ${jars_tar}
 	${MKDIR_P} ${prefix}/${share_dir_rel}
-	unset CDPATH && cd ${prefix}/${share_dir_rel} && tar xvf ${PWD}/${jars_tar}
+	unset CDPATH && cd ${prefix}/${share_dir_rel} && tar xvf ${jars_tar_abs}
 
 ${prefix}/bin/%: ${all_dir}/bin/%
 	${MKDIR_P} ${dir $@}
