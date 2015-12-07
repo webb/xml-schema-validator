@@ -120,7 +120,7 @@ for key in ${!catalogs[@]}
 do command+=( --catalog "${catalogs[key]}" )
 done
 
-if (( ${#schema_locations} > 0 ))
+if (( ${#schema_locations[@]} > 0 ))
 then command+=( --schema-location "$(tokenize-strings --output-separator=' ' "${schema_locations[@]}" )" )
 fi
 
