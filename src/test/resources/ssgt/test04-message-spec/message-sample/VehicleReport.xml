@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vr:VehicleReport
+  xmlns:nc="http://release.niem.gov/niem/niem-core/4.0/"
+  xmlns:vr="http://www.example.org/VehicleReport-extension">
+  <nc:Person>
+    <nc:PersonName>
+      <nc:PersonGivenName>Bob</nc:PersonGivenName>
+      <nc:PersonSurName>Wilson</nc:PersonSurName>
+    </nc:PersonName>
+  </nc:Person>
+  <nc:VehicleIdentification>
+    <nc:IdentificationID>
+      5NMSH73E79H264311
+    </nc:IdentificationID>
+  </nc:VehicleIdentification>
+</vr:VehicleReport>

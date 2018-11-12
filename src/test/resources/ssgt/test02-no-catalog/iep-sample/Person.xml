@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<px:PersonExample
+  xmlns:nc="http://release.niem.gov/niem/niem-core/4.0/"
+  xmlns:px="http://www.example.org/PersonExample">
+  <nc:Person>
+    <nc:PersonName>
+      <nc:PersonGivenName>Bob</nc:PersonGivenName>
+      <nc:PersonSurName>Wilson</nc:PersonSurName>
+    </nc:PersonName>
+  </nc:Person>
+</px:PersonExample>

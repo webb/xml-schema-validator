@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<c:NIEMManifest
+    ct:conformanceTargets="http://reference.niem.gov/niem/specification/naming-and-design-rules/4.0/#ExtensionSchemaDocument"
+    targetNamespace="http://reference.niem.gov/niem/resource/mpd/catalog/3.0/"
+    version="1.0"
+    xmlns:appinfo="http://release.niem.gov/niem/appinfo/4.0/"
+    xmlns:c="http://reference.niem.gov/niem/resource/mpd/catalog/3.0/"
+    xmlns:ct="http://release.niem.gov/niem/conformanceTargets/3.0/"
+    xmlns:nc="http://release.niem.gov/niem/niem-core/4.0/"
+    xmlns:structures="http://release.niem.gov/niem/structures/4.0/"
+    xmlns:niem-xs="http://release.niem.gov/niem/proxy/xsd/4.0/"
+    xmlns:vr="http://www.example.org/VehicleReport-extension">
+   
+   <c:MessageSpecification structures:uri="http://my.gov/vehicleReport/1.0">
+      <nc:DescriptionText>
+         This message specification shows how to create a basic extension schema based on vehicle ownership.
+      </nc:DescriptionText>
+      <c:MessageInformation>
+         <c:AuthoritativeSource>
+            <nc:EntityOrganization>
+               <nc:OrganizationName>GTRI</nc:OrganizationName>
+               <nc:OrganizationPrimaryContactInformation>
+                  <nc:ContactWebsiteURI>http://gtri.org/</nc:ContactWebsiteURI>
+               </nc:OrganizationPrimaryContactInformation>
+            </nc:EntityOrganization>
+         </c:AuthoritativeSource>
+         <c:CreationDate>2018-10-10</c:CreationDate>
+         <c:StatusText>Alpha</c:StatusText>
+      </c:MessageInformation>
+      <c:MessageConformanceTarget structures:uri="http://my.gov/vehicleReport/1.0#Message">
+        <c:HasDocumentElement c:qualifiedNameList="vr:VehicleReport"/>
+        <c:XMLSchemaValid>
+          <c:XMLCatalog c:pathURI="base-xsd/xml-catalog.xml"/>
+        </c:XMLSchemaValid>
+        <c:MessageSampleXMLDocument c:pathURI="message-sample/VehicleReport.xml"/>
+      </c:MessageConformanceTarget>
+      <c:ReadMe c:pathURI="readme.md"/>
+      <c:XMLCatalog c:pathURI="base-xsd/niem/xml-catalog.xml"/>
+      <c:Wantlist c:pathURI="base-xsd/niem/wantlist.xml"/>
+      <c:IEPSampleXMLDocument c:pathURI="message-sample/VehicleReport.xml"/>
+      <c:ExtensionSchemaDocument c:pathURI="base-xsd/extension/SuperHero-extension.xsd"/>
+      
+      <c:SubsetSchemaDocument c:pathURI="base-xsd/niem/utility/appinfo/4.0/appinfo.xsd"/>
+      <c:SubsetSchemaDocument c:pathURI="base-xsd/niem/utility/conformanceTargets/3.0/conformanceTargets.xsd"/>
+      <c:SubsetSchemaDocument c:pathURI="base-xsd/niem/niem-core/4.0/niem-core.xsd"/>
+      <c:SubsetSchemaDocument c:pathURI="base-xsd/niem/proxy/xsd/4.0/xs.xsd"/>
+      <c:SubsetSchemaDocument c:pathURI="base-xsd/niem/utility/structures/4.0/structures.xsd"/>
+   </c:MessageSpecification>
+</c:NIEMManifest>
