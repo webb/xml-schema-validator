@@ -39,7 +39,7 @@ share_dir=$root_dir/'M_SHARE_DIR_REL'
 #HELP:  --not-paranoid: Omit basic/foundational validations
 
 #HELP:  --catalog=$file | -c $file: Use XML Catalog file to direct schema assembly
-#HELP:      This opion can be used mulitple times. Order matters.
+#HELP:      This option can be used multiple times. Order matters.
 catalogs=()
 opt_catalog () {
     (( $# == 1 )) || fail_assert "Need 1 argument (got $#)"
