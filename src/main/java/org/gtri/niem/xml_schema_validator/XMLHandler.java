@@ -77,15 +77,17 @@ public class XMLHandler extends DefaultHandler2
 
   public void error(SAXParseException exception)
     throws SAXException {
-    printError("error", exception);
     Logger.getInstance().trace("XML parse error", exception);
     Logger.getInstance().setExitStatus(1);
+    printError("error", exception);
   }
 
   public void fatalError(SAXParseException exception)
     throws SAXException {
     Logger.getInstance().trace("XML parse fatal error", exception);
+    Logger.getInstance().setExitStatus(1);
     printError("fatal error", exception);
+    System.exit(1);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -109,7 +111,7 @@ public class XMLHandler extends DefaultHandler2
     throws SAXException,
            IOException {
     Logger.getInstance().error("illegal call of {}.{}", XMLHandler.class, "resolveEntity(...)");
-    Logger.getInstance().trace("resolvEntity({}, {}, {}, {})", name, publicId, baseURI, systemId);
+    Logger.getInstance().trace("resolveEntity({}, {}, {}, {})", name, publicId, baseURI, systemId);
     InputSource returnValue = super.resolveEntity(name, publicId, baseURI, systemId);
     Logger.getInstance().trace("resolveEntity yields {}", returnValue);
     return returnValue;
