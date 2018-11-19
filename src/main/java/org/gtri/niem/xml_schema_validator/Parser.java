@@ -28,14 +28,15 @@ public class Parser
     try {
       setFeature("http://apache.org/xml/features/allow-java-encodings", false);
       setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
+      setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
       setFeature("http://apache.org/xml/features/standard-uri-conformant", true);
       setFeature("http://apache.org/xml/features/validation/schema", true);
       setFeature("http://apache.org/xml/features/validation/schema/element-default", true);
       setFeature("http://apache.org/xml/features/validation/schema/normalized-value", true);
       setFeature("http://apache.org/xml/features/validation/warn-on-duplicate-attdef", true);
       setFeature("http://apache.org/xml/features/warn-on-duplicate-entitydef", true);
-      setFeature("http://xml.org/sax/features/external-general-entities", true);
-      setFeature("http://xml.org/sax/features/external-parameter-entities", true);
+      setFeature("http://xml.org/sax/features/external-general-entities", false);
+      setFeature("http://xml.org/sax/features/external-parameter-entities", false);
       setFeature("http://xml.org/sax/features/namespaces", true);
       setFeature("http://xml.org/sax/features/validation", true);
 
