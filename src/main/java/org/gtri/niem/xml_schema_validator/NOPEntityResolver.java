@@ -12,6 +12,8 @@ public class NOPEntityResolver
                                        String baseURI)
     throws SAXException,
            IOException {
+    Logger.getInstance().info("NOP call of {}.{}", XMLHandler.class, "getExternalSubset(...)");
+    Logger.getInstance().trace("getExternalSubset({}, {})", name, baseURI);
     return null;
   }
 
@@ -21,6 +23,8 @@ public class NOPEntityResolver
                                    String systemId)
     throws SAXException,
            IOException {
+    Logger.getInstance().info("NOP call of {}.{}", XMLHandler.class, "resolveEntity(...)");
+    Logger.getInstance().trace("resolveEntity({}, {}, {}, {})", name, publicId, baseURI, systemId);
     return null;
   }
 
@@ -28,6 +32,8 @@ public class NOPEntityResolver
                                    String systemId)
     throws SAXException,
            IOException {
+    Logger.getInstance().info("NOP call of {}.{}", XMLHandler.class, "resolveEntity(...)");
+    Logger.getInstance().trace("resolveEntity({}, {})", publicId, systemId);
     return null;
   }
     

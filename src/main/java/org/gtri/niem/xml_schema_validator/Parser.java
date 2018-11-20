@@ -43,8 +43,10 @@ public class Parser
       setFeature("http://apache.org/xml/features/validation/schema-full-checking",
                  (schemaFullCheckingIndicator == SchemaFullCheckingIndicator.SchemaFullChecking));
 
-      Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
-      setProperty("http://apache.org/xml/properties/schema/external-schemaLocation", schemaLocations);
+      if (schemaLocations != null) {
+        Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
+        setProperty("http://apache.org/xml/properties/schema/external-schemaLocation", schemaLocations);
+      }
 
       setContentHandler(XMLHandler.getInstance());
       setDTDHandler(XMLHandler.getInstance());
