@@ -6,9 +6,18 @@ import org.xml.sax.ext.EntityResolver2;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class NOPEntityResolver
-  implements EntityResolver2
+public class NOPEntityResolver implements EntityResolver2
 {
+  private NOPEntityResolver() {
+
+  }
+
+  private static final NOPEntityResolver instance = new NOPEntityResolver();
+
+  public static NOPEntityResolver getInstance() {
+    return instance;
+  }
+
   public InputSource getExternalSubset(String name,
                                        String baseURI)
     throws SAXException,

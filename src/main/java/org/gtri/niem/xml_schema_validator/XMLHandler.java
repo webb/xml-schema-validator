@@ -12,8 +12,11 @@ import org.xml.sax.InputSource;
 public class XMLHandler extends DefaultHandler2
 {
   private XMLHandler() {
+
   }
+
   private static final XMLHandler instance = new XMLHandler();
+
   public static XMLHandler getInstance() {
     return instance;
   }
