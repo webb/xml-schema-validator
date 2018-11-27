@@ -24,8 +24,8 @@ $ xs-validate -c base-xsd/xml-catalog.xml iep-sample/exchange-sample.xml
 $ cd src/test/resources/ssgt/test04-message-spec
 $ xs-validate -c base-xsd/xml-catalog.xml message-sample/VehicleReport.xml
 
-$ cd src/test/resources/ssgt/test05-message-spec
-$ xs-validate --schema-location=px=http://www.example.org/PersonExample -c base-xsd/niem/xml-catalog.xml iep-sample/Person.xml
+$ cd src/test/resources/ssgt/test05-schema-location
+$ xs-validate --schema-location=http://release.niem.gov/niem/niem-core/4.0/=../base-xsd/niem/niem-core/4.0/niem-core.xsd -c base-xsd/niem/xml-catalog.xml iep-sample/Person.xml
 
 ```
 
