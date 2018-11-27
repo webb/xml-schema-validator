@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<px:PersonExample
+<nc:Person
   xmlns:nc="http://release.niem.gov/niem/niem-core/4.0/"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://release.niem.gov/niem/niem-core/4.0/ ../base-xsd/niem/niem-core/4.0/niem-core.xsd">
-  <nc:Person>
-    <nc:PersonName>
-      <nc:PersonGivenName>Bob</nc:PersonGivenName>
-      <nc:PersonSurName>Wilson</nc:PersonSurName>
-    </nc:PersonName>
-  </nc:Person>
-</px:PersonExample>
+  <nc:PersonName>
+    <nc:PersonGivenName>Bob</nc:PersonGivenName>
+    <nc:PersonSurName>Wilson</nc:PersonSurName>
+  </nc:PersonName>
+</nc:Person>
