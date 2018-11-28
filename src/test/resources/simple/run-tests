@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+. "$HOME"/share/wrtools-core/temp.bash
+
+temp_make_file stdout
+temp_make_file stderr
+
+echo "test01-example:"
+test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
+	xs-validate --catalog=test01-example/catalog.xml test01-example/example.xml
+
+cat << EOF > "$stderr"
+ERROR XML Catalog file "test02-no-catalog/catalog.xml" must exist
+EOF
+
+echo "test02-no-catalog:"
+test-run --stdout=/dev/null --stderr="$stderr" --exit-status=1 -- \
+	xs-validate --catalog=test02-no-catalog/catalog.xml test02-no-catalog/example.xml
+
+# echo "test03-multi-catalog:"
+# test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
+# 	 xs-validate --catalog=test03-multi-catalog/catalog.xml test03-multi-catalog/example.xml
+
+cat << EOF > "$stdout"
+$PWD/test04-billion-laughs/example.xml:2.10: fatal error: DOCTYPE is disallowed when the feature "http://apache.org/xml/features/disallow-doctype-decl" set to true.
+EOF
+
+echo "test04-billion-laughs:"
+test-run --stdout="$stdout" --stderr=/dev/null --exit-status=1 -- \
+	xs-validate test04-billion-laughs/example.xml
