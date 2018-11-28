@@ -4,6 +4,7 @@
 
 temp_make_file stdout
 
+echo "test01-base-test:"
 test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
 	xs-validate --catalog=test01-base-test/base-xsd/niem/xml-catalog.xml test01-base-test/iep-sample/Person.xml
 
@@ -11,31 +12,38 @@ cat << EOF > "$stdout"
 $PWD/test01-base-test/iep-sample/Person.xml:3.58: error: cvc-elt.1.a: Cannot find the declaration of element 'nc:Person'.
 EOF
 
+echo "test01-base-test-negative:"
 test-run --stdout="$stdout" --stderr=/dev/null --exit-status=1 -- \
 	xs-validate test01-base-test/iep-sample/Person.xml
 
-test-run --stdout="$stdout" --stderr=/dev/null --exit-status=0 -- \
-	xs-validate test01-base-test/iep-sample/Person-with-xsi-schemalocation.xml
+echo "test01-base-test-with-xsi-schema-location:"
+test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
+	xs-validate --catalog=test01-base-test/base-xsd/niem/xml-catalog.xml test01-base-test/iep-sample/Person-with-xsi-schemalocation.xml
 
 cat << EOF > "$stdout"
 $PWD/test02-no-catalog/iep-sample/Person.xml:3.58: error: cvc-elt.1.a: Cannot find the declaration of element 'nc:Person'.
 EOF
 
-test-run --stdout=/dev/null --stderr=/dev/null --exit-status=1 -- \
+echo "test02-no-catalog:"
+test-run --stdout="$stdout" --stderr=/dev/null --exit-status=1 -- \
 	xs-validate test02-no-catalog/iep-sample/Person.xml
 
+echo "test03-extension:"
 test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
 	xs-validate --catalog=test03-extension/base-xsd/xml-catalog.xml test03-extension/iep-sample/exchange-sample.xml
 
+echo "test04-message-spec:"
 test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
 	xs-validate --catalog=test04-message-spec/base-xsd/xml-catalog.xml --schema-location=http://www.example.org/VehicleReport-extension=../base-xsd/extension/VehicleReport-extension.xsd test04-message-spec/message-sample/VehicleReport.xml
 
 cat << EOF > "$stdout"
-$PWD/test04-message-spec/message-sample/Vehicle-Report.xml:4.61: error: cvc-elt.1.a: Cannot find the declaration of element 'vr:VehicleReport'.
+$PWD/test04-message-spec/message-sample/VehicleReport.xml:4.61: error: cvc-elt.1.a: Cannot find the declaration of element 'vr:VehicleReport'.
 EOF
 
-test-run --stdout=/dev/null --stderr=/dev/null --exit-status=1 -- \
+echo "test04-message-spec-negative:"
+test-run --stdout="$stdout" --stderr=/dev/null --exit-status=1 -- \
 	xs-validate --catalog=test04-message-spec/base-xsd/xml-catalog.xml test04-message-spec/message-sample/VehicleReport.xml
 
+echo "test05-schema-location:"
 test-run --stdout=/dev/null --stderr=/dev/null --exit-status=0 -- \
 	xs-validate --catalog=test05-schema-location/base-xsd/niem/xml-catalog.xml --schema-location=http://release.niem.gov/niem/niem-core/4.0/=../base-xsd/niem/niem-core/4.0/niem-core.xsd test05-schema-location/iep-sample/Person.xml
