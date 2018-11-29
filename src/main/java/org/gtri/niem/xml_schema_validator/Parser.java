@@ -2,20 +2,27 @@
 package org.gtri.niem.xml_schema_validator;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 import org.apache.xerces.parsers.SAXParser;
-import org.apache.xerces.util.XMLCatalogResolver;
+// import org.apache.xerces.util.XMLCatalogResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXException;
-import java.io.IOException;
 import org.apache.xerces.util.SymbolTable;
 
 public class Parser
     extends SAXParser
 {
   public enum SchemaFullCheckingIndicator { SchemaFullChecking, NotSchemaFullChecking }
+
+  // static final String CATALOG_FILE = CatalogFeatures.Feature.FILES.getPropertyName();
 
   public GrammarPool getGrammarPool() {
     return (GrammarPool)fConfiguration.getProperty(XMLGRAMMAR_POOL);
@@ -53,8 +60,18 @@ public class Parser
       setErrorHandler(XMLHandler.getInstance());
 
       if (catalogURIs.size() > 0) {
-        XMLCatalogResolver resolver = new XMLCatalogResolver();
-        resolver.setCatalogList(catalogURIs.toArray(new String[catalogURIs.size()]));
+        // XMLCatalogResolver resolver = new XMLCatalogResolver();
+        // resolver.setCatalogList(catalogURIs.toArray(new String[catalogURIs.size()]));
+
+        List<URI> catalogUriList = new ArrayList<>();
+
+        for (String uriString: catalogURIs) {
+          URI uri = URI.create(uriString);
+          catalogUriList.add(uri);
+        }
+
+        CatalogResolver resolver = CatalogManager.catalogResolver(CatalogFeatures.defaults(),
+                catalogUriList.toArray(new URI[catalogUriList.size()]));
         setProperty("http://apache.org/xml/properties/internal/entity-resolver", resolver);
       }
       
