@@ -1,13 +1,14 @@
 
 package org.gtri.niem.xml_schema_validator;
 
-import java.io.File;
-import java.net.URI;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import java.io.IOException;
 import org.xml.sax.InputSource;
+
+import java.io.File;
+import java.net.URI;
 
 public class XMLHandler extends DefaultHandler2
 {

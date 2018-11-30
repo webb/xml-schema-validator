@@ -1,26 +1,27 @@
 
 package org.gtri.niem.xml_schema_validator;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
+// import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.MissingArgumentException;
+// import org.apache.commons.cli.MissingArgumentException;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
+// import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.UnrecognizedOptionException;
-    
-public class CLI {
-  List<String> catalogURIs = new ArrayList<String>();
-  List <File> subjectXMLFiles = new ArrayList<File>();
-  String schemaLocations = null;
+// import org.apache.commons.cli.UnrecognizedOptionException;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+    
+public class CLI
+{
+  private List<String> catalogURIs = new ArrayList<>();
+  private List <File> subjectXMLFiles = new ArrayList<>();
+  private String schemaLocations = null;
+  static private final boolean useXerces = true;
   static private final CLI cli = new CLI();
   static public CLI getInstance () {
     return cli;
@@ -34,14 +35,23 @@ public class CLI {
     try {
       CLI cli = CLI.getInstance();
       cli.processArgs(args);
-	    
-      Parser parser = new Parser(Parser.SchemaFullCheckingIndicator.SchemaFullChecking,
-                                 cli.catalogURIs,
-                                 cli.schemaLocations);
-	    
-      for (File subjectXMLFile : cli.subjectXMLFiles) {
-        Logger.getInstance().info("parsing subject XML file \"{}\"", subjectXMLFile);
-        parser.parse(subjectXMLFile);
+
+      if (useXerces) {
+        XercesParser parser = new XercesParser(XercesParser.SchemaFullCheckingIndicator.SchemaFullChecking,
+                cli.catalogURIs,
+                cli.schemaLocations);
+
+        for (File subjectXMLFile : cli.subjectXMLFiles) {
+          Logger.getInstance().info("parsing subject XML file \"{}\" using Xerces", subjectXMLFile);
+          parser.parse(subjectXMLFile);
+        }
+      } else {
+        XMLCatalogParser parser = new XMLCatalogParser(cli.catalogURIs, cli.schemaLocations);
+
+        for (File subjectXMLFile : cli.subjectXMLFiles) {
+          Logger.getInstance().info("parsing subject XML file \"{}\" using XML Catalog API", subjectXMLFile);
+          // parser.parse(subjectXMLFile);
+        }
       }
     }
     catch (java.lang.Throwable throwable) {
