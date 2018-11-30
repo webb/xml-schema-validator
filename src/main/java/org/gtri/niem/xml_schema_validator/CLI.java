@@ -50,7 +50,7 @@ public class CLI
 
         for (File subjectXMLFile : cli.subjectXMLFiles) {
           Logger.getInstance().info("parsing subject XML file \"{}\" using XML Catalog API", subjectXMLFile);
-          // parser.parse(subjectXMLFile);
+          parser.parse(subjectXMLFile);
         }
       }
     }
