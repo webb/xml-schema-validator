@@ -56,7 +56,7 @@ public class XMLCatalogParser extends SAXParser
       spf.setXIncludeAware(true);
 
       spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-      //TODO: spf.setFeature(XMLConstants.USE_CATALOG, true);
+      spf.setFeature(XMLConstants.USE_CATALOG, true);
 
       spf.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
       spf.setFeature(FEATURE_FATAL_ERROR_CONTINUE, true);
@@ -90,12 +90,14 @@ public class XMLCatalogParser extends SAXParser
 
           CatalogResolver resolver = CatalogManager.catalogResolver(CatalogFeatures.defaults(),
                   catalogUriList.toArray(new URI[catalogUriList.size()]));
-          //TODO: parser.setProperty(CATALOG_FILE, resolver);
-          //TODO: parser.setProperty(CATALOG_PREFER, "system");
+          setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file");
+          setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
+          setProperty(CATALOG_FILE, resolver);
+          setProperty(CATALOG_PREFER, "system");
 
           if (schemaLocations != null) {
             Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
-            parser.setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
+            setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
           }
       }
     }
