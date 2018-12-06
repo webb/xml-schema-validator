@@ -11,12 +11,8 @@ import org.xml.sax.XMLReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.catalog.CatalogFeatures;
-import javax.xml.catalog.CatalogManager;
-import javax.xml.catalog.CatalogResolver;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -81,24 +77,17 @@ public class XMLCatalogParser extends SAXParser
       parser = spf.newSAXParser();
       reader = parser.getXMLReader();
 
+      setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file");
+      setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
+
+      if (schemaLocations != null) {
+        Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
+        setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
+      }
+
       if (catalogURIs.size() > 0) {
-          List<URI> catalogUriList = new ArrayList<>();
-
-          for (String uriString : catalogURIs) {
-              catalogUriList.add(URI.create(uriString));
-          }
-
-          CatalogResolver resolver = CatalogManager.catalogResolver(CatalogFeatures.defaults(),
-                  catalogUriList.toArray(new URI[catalogUriList.size()]));
-          setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file");
-          setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
-          setProperty(CATALOG_FILE, resolver);
+          setProperty(CATALOG_FILE, String.join(";", catalogURIs));
           setProperty(CATALOG_PREFER, "system");
-
-          if (schemaLocations != null) {
-            Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
-            setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
-          }
       }
     }
     catch (SAXException exception) {
