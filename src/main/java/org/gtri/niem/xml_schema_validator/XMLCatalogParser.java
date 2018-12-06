@@ -85,9 +85,11 @@ public class XMLCatalogParser extends SAXParser
         setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
       }
 
+      String catalogURIList = String.join(";", catalogURIs);
       if (catalogURIs.size() > 0) {
-          setProperty(CATALOG_FILE, String.join(";", catalogURIs));
-          setProperty(CATALOG_PREFER, "system");
+        Logger.getInstance().debug("Setting CATALOG_FILE property: " + catalogURIList);
+        setProperty(CATALOG_FILE, catalogURIList);
+        setProperty(CATALOG_PREFER, "system");
       }
     }
     catch (SAXException exception) {
