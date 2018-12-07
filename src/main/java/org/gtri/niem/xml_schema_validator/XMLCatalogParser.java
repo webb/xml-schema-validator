@@ -1,16 +1,12 @@
 
 package org.gtri.niem.xml_schema_validator;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import javax.xml.catalog.CatalogFeatures;
 import javax.xml.parsers.ParserConfigurationException;
@@ -118,13 +114,6 @@ public class XMLCatalogParser extends SAXParser
 
   public XMLReader getXMLReader() throws SAXException {
     return reader;
-  }
-
-  public void parse(File file) throws SAXException, IOException {
-    // TODO: use XMLHandler class here?
-    DefaultHandler dh = new DefaultHandler();
-    InputSource is = new InputSource(file.toURI().toString());
-    parser.parse(is, dh);
   }
 
   public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
