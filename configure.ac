@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([xml-schema-validator], [0.1], [wr@gatech.edu])
+AC_INIT([XML Schema Validator], [0], [https://github.com/webb/xml-schema-validator/issues], [xml-schema-validator], [https://github.com/webb/xml-schema-validator])
 AC_COPYRIGHT
 # AC_PREFIX_DEFAULT($HOME)
 # AM_INIT_AUTOMAKE([-Wall -Werror gnu])
@@ -26,9 +26,14 @@ AC_DEFUN([WR_check_prog_options],[AC_PATH_PROGS($1,$2)
   test "x$[]$1" = "x" && AC_MSG_ERROR([$1 not found])])dnl
 
 WR_check_prog(bash)
+WR_check_prog(git)
 WR_check_prog(gradle)
 WR_check_prog_options(find,gfind find)
 WR_check_prog_options(m4,gm4 m4)
+
+AC_PATH_PROGS(realpath,grealpath realpath)
+test "x$[]realpath" = "x" && AC_MSG_ERROR([realpath not found])
+
 WR_check_prog(touch)
 
 AC_PATH_PROGS(stow,stow,stow)

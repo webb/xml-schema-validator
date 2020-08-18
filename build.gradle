@@ -1,10 +1,11 @@
 apply plugin: 'java'
 
-version = 'M_PACKAGE_VERSION'
-buildDir = 'M_GRADLE_BUILD_DIR'
+version = '0'
+buildDir = "${project.build_dir}"
+
 
 task(debug, dependsOn: 'classes', type: JavaExec) {
-    main = 'org.gtri.niem.schema_assembly.CLI'
+    main = 'org.gtri.niem.xml_schema_validator.CLI'
     classpath = sourceSets.main.runtimeClasspath
 //        args 'server', 'my-application.yml'
     debug true
@@ -16,6 +17,7 @@ jar {
                    'Implementation-Version': version,
 		   'Main-Class': 'org.gtri.niem.xml_schema_validator.CLI'
     }
+    baseName = "xml-schema-validator"
 }
 
 repositories {
@@ -50,6 +52,13 @@ task dist(type: Tar) {
         from jar.archivePath
         from configurations.runtime
     }
+}
+
+task copyOutJars(type:Copy) {
+  dependsOn jar
+  destinationDir = file("${project.jars_dir}")
+  from jar.archivePath
+  from configurations.runtime
 }
 
 artifacts {

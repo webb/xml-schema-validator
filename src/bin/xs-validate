@@ -24,7 +24,7 @@ root_dir=$(dirname "$0")/..
 . "$root_dir"/share/wrtools-core/paranoia.bash
 . "$root_dir"/share/wrtools-core/command-path.bash
 
-share_dir=$root_dir/'M_SHARE_DIR_REL'
+share_dir=$root_dir/xml-schema-validator
 
 # all command-line processing is done here. This will pass stuff to
 # the Java app, which has its own command-line processing.

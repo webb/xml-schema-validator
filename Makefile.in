@@ -1,126 +1,126 @@
 
-SHELL = @bash@
+# Copyright 2014-2020 Georgia Tech Research Corporation (GTRC). All rights reserved.
 
-PACKAGE_NAME = @PACKAGE_NAME@
-PACKAGE_VERSION = @PACKAGE_VERSION@
-prefix = @prefix@
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 
-MKDIR_P = @MKDIR_P@
-SED = @SED@
-INSTALL = @INSTALL@
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 
-m4 = @m4@
-find = @find@
-gradle= @gradle@
-touch = @touch@
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
 
-src_files = $(shell ${find} src -type f ! -path 'src/main/*' ! -name '*~' ! -name '\#*\#' -print)
-java_src_files = $(shell ${find} src/main/java -type f ! -name '*~' ! -name '\#*\#' -print)
+#############################################################################
+# Don't touch these...
+#############################################################################
 
-dist_name = $(PACKAGE_NAME)-$(PACKAGE_VERSION)
-share_dir_rel = share/${PACKAGE_NAME}
-build_dir = tmp/build
-all_dir = tmp/all
-
-step_files := ${src_files}
-step_files := ${step_files:src/%=${build_dir}/%}
-step_files := ${step_files:%.m4=%}
-step_files := ${step_files:${build_dir}/%=${all_dir}/%}
-
-all_files = ${step_files}
-install_files = ${all_files:${all_dir}/%=${prefix}/%}
-
-gradle_build_dir = tmp/gradle-build
-jars_tar = ${gradle_build_dir}/distributions/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar
-override jars_tar_abs = ${shell mkdir -p ${dir ${jars_tar}} && cd ${dir ${jars_tar}} && pwd}/${notdir ${jars_tar}}
-
-installed_jars_token = tmp/tokens/installed-jars
-
-m4_command = ${m4} -P \
-	-D M_PACKAGE_VERSION=${PACKAGE_VERSION} \
-	-D M_PACKAGE_NAME=${PACKAGE_NAME} \
-	-D M_GRADLE_BUILD_DIR=${gradle_build_dir} \
-	-D M_SHARE_DIR_REL=${share_dir_rel} \
-
-.PHONY: default
-default: all
-
+this_makefile := ${lastword ${MAKEFILE_LIST}}
+SHELL = @bash@ -o pipefail -o errexit -o nounset
 .SECONDARY:
 
 #############################################################################
-
-.PHONY: help # Print this help
-help:
-	@ echo Available targets:
-	@ $(SED) -e 's/^.PHONY: *\([^ #]*\) *\# *\(.*\)$$/  \1: \2/p;d' Makefile
-
+# things to set / override
 #############################################################################
-# build java
 
-.PHONY: build-java # build the Java stuff
-build-java: ${jars_tar}
+#HELP:Build for @PACKAGE_NAME@ (@PACKAGE_TARNAME@)
 
-${jars_tar}: build.gradle settings.gradle ${java_src_files}
-	${RM} -r ${gradle_build_dir}
-	${gradle} dist
+srcdir = @srcdir@
+builddir = @builddir@
+prefix = @prefix@
+PACKAGE_TARNAME = @PACKAGE_TARNAME@
 
-build.gradle: build.gradle.m4 Makefile
-	${m4_command} $< > $@
+# commands
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_DATA = @INSTALL_DATA@
+MKDIR_P = @MKDIR_P@
 
-settings.gradle: settings.gradle.m4 Makefile
-	${m4_command} $< > $@
+gradle = @gradle@
+find = @find@
+m4 = @m4@
+realpath = @realpath@
+tar = @tar@
+zip = @zip@
 
-#############################################################################
-# build
+tmp_dir = ${builddir}/tmp
+gradle_build_dir = ${tmp_dir}/gradle-build
+tokens_dir = ${tmp_dir}/tokens
+all_dir = ${tmp_dir}/all
+jars_dir = ${all_dir}/share/${PACKAGE_TARNAME}
 
-${build_dir}/%: src/%
+gradle_out_dir = ${tmp_dir}/gradle-out
+built_jars_token = ${tokens_dir}/built-jars
+built_all_token =  ${tokens_dir}/built-all
+
+all_files = \
+  ${all_dir}/bin/xs-validate
+
+install_files_default = ${shell find ${all_dir} -type f || true}
+install_files = ${install_files_default:${all_dir}/%=${prefix}/%}
+
+#HELP:Default target is "all". Targets include:
+.DEFAULT_GOAL = all
+
+.PHONY: all #  Build everything
+all: ${all_files} ${built_jars_token}
+	@ echo build $@ from $^ because $?
+
+${built_jars_token}: ${srcdir}/build.gradle
+	@ echo build $@ from $^ because $?
+	${RM} -r ${jars_dir}
+	${gradle} --no-daemon \
+	          --console plain --info \
+	          --project-prop jars_dir=${shell ${realpath} -m ${jars_dir}} \
+	          --project-prop build_dir=${shell ${realpath} -m ${gradle_build_dir}} \
+	          --project-cache-dir=${shell ${realpath} -m ${builddir}/tmp/gradle-cache-dir} \
+	          --build-file ${srcdir}/build.gradle \
+	          copyOutJars
 	${MKDIR_P} ${dir $@}
-	cp $< $@
+	touch $@
 
-${build_dir}/%: ${build_dir}/%.m4
-	${m4_command} $< > $@
-
-#############################################################################
-# all
-
-.PHONY: all # Build all products
-all: ${jars_tar} ${all_files}
-
-${all_dir}/%: ${build_dir}/%
+${all_dir}/%: ${srcdir}/src/%
+	@ echo build $@ from $^ because $?
 	${MKDIR_P} ${dir $@}
-	cp $< $@
+	${INSTALL_DATA} $< $@
 
 #############################################################################
-# install
 
-.PHONY: install # Install build products to ${prefix} (default @prefix@, set via configure)
-install: ${install_files} install-jars
-
-.PHONY: install-jars
-install-jars: ${jars_tar}
-	${MKDIR_P} ${prefix}/${share_dir_rel}
-	unset CDPATH && cd ${prefix}/${share_dir_rel} && tar xvf ${jars_tar_abs}
+.PHONY: install #  Put everything in the install locations
+install: ${install_files}
 
 ${prefix}/bin/%: ${all_dir}/bin/%
 	${MKDIR_P} ${dir $@}
-	${INSTALL} -m 755 $< $@
+	${INSTALL_PROGRAM} $< $@
 
 ${prefix}/%: ${all_dir}/%
 	${MKDIR_P} ${dir $@}
-	${INSTALL} -m 644 $< $@
+	${INSTALL_DATA} $< $@
 
-.PHONY: uninstall # Remove installed build products
+.PHONY: uninstall #  Remove all the known install files
 uninstall:
-	${RM} ${install_files}
-	${RM} -r ${prefix}/${share_dir_rel}
+	$(RM) ${install_files}
 
 #############################################################################
 
+.PHONY: clean #  remove common build products
 clean:
-	${RM} -r tmp .gradle .nb-gradle
-	find . -type f -name '*~' -delete
-	${RM} build.gradle
+	$(RM) -r ${tmp_dir}
 
+.PHONY: distclean #  remove everything but what's needed to build
 distclean: clean
-	${RM} -r autom4te.cache Makefile stow.mk
+	$(RM) -r autom4te.cache .gradle tmp
+	$(RM) Makefile config.log config.status stow.mk
 
+#############################################################################
+# make help: this must be the last target
+
+.PHONY: help #   Print this help
+help:
+	@ ${SED} -e '/^\.PHONY:/s/^\.PHONY: *\([^ #]*\) *\#\( *\)\([^ ].*\)/\2\1: \3/p;/^[^#]*#HELP:/s/[^#]*#HELP:\(.*\)/\1/p;d' ${this_makefile}
+
+# don't put anything after this
