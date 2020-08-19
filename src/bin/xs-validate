@@ -24,7 +24,8 @@ root_dir=$(dirname "$0")/..
 . "$root_dir"/share/wrtools-core/paranoia.bash
 . "$root_dir"/share/wrtools-core/command-path.bash
 
-share_dir=$root_dir/xml-schema-validator
+share_dir=$root_dir/share/xml-schema-validator
+vecho "share_dir=$share_dir"
 
 # all command-line processing is done here. This will pass stuff to
 # the Java app, which has its own command-line processing.
@@ -99,9 +100,8 @@ do case "$option" in
 done
 shift $((OPTIND-1))
 
-vecho "share_dir=$share_dir"
 
-classpath=$( find -L "${share_dir}" -type f -name '*.jar' -print0 | xargs -0 tokenize-strings --output-separator=: )
+classpath=$(tokenize-strings --output-separator=: "${share_dir}"/*.jar)
 vecho "classpath=$classpath"
 
 ###############################################################################
