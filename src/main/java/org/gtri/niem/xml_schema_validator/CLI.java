@@ -21,6 +21,7 @@ public class CLI
   private List<String> catalogURIs = new ArrayList<>();
   private List <File> subjectXMLFiles = new ArrayList<>();
   private String schemaLocations = null;
+  static private final boolean useXerces = false;
   static private final CLI cli = new CLI();
   static public CLI getInstance () {
     return cli;
@@ -35,13 +36,24 @@ public class CLI
       CLI cli = CLI.getInstance();
       cli.processArgs(args);
 
-      XMLCatalogParser parser = new XMLCatalogParser(XMLCatalogParser.SchemaFullCheckingIndicator.SchemaFullChecking,
-              cli.catalogURIs,
-              cli.schemaLocations);
+      if (useXerces) {
+        XercesParser parser = new XercesParser(XercesParser.SchemaFullCheckingIndicator.SchemaFullChecking,
+                cli.catalogURIs,
+                cli.schemaLocations);
 
-      for (File subjectXMLFile : cli.subjectXMLFiles) {
-        Logger.getInstance().info("parsing subject XML file \"{}\" using XML Catalog API", subjectXMLFile);
-        parser.parse(subjectXMLFile, XMLHandler.getInstance());
+        for (File subjectXMLFile : cli.subjectXMLFiles) {
+          Logger.getInstance().info("parsing subject XML file \"{}\" using Xerces", subjectXMLFile);
+          parser.parse(subjectXMLFile);
+        }
+      } else {
+        XMLCatalogParser parser = new XMLCatalogParser(XMLCatalogParser.SchemaFullCheckingIndicator.SchemaFullChecking,
+                cli.catalogURIs,
+                cli.schemaLocations);
+
+        for (File subjectXMLFile : cli.subjectXMLFiles) {
+          Logger.getInstance().info("parsing subject XML file \"{}\" using XML Catalog API", subjectXMLFile);
+          parser.parse(subjectXMLFile);
+        }
       }
     }
     catch (java.lang.Throwable throwable) {

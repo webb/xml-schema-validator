@@ -1,14 +1,22 @@
 
 package org.gtri.niem.xml_schema_validator;
 
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -48,7 +56,7 @@ public class XMLCatalogParser extends SAXParser
       spf.setXIncludeAware(true);
 
       spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-      spf.setFeature(XMLConstants.USE_CATALOG, true);
+      //TODO: spf.setFeature(XMLConstants.USE_CATALOG, true);
 
       spf.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
       spf.setFeature(FEATURE_FATAL_ERROR_CONTINUE, true);
@@ -73,19 +81,22 @@ public class XMLCatalogParser extends SAXParser
       parser = spf.newSAXParser();
       reader = parser.getXMLReader();
 
-      setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file");
-      setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
-
-      if (schemaLocations != null) {
-        Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
-        setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
-      }
-
       if (catalogURIs.size() > 0) {
-        String catalogURIList = String.join(";", catalogURIs);
-        Logger.getInstance().debug("Setting CATALOG_FILE property: " + catalogURIList);
-        setProperty(CATALOG_FILE, catalogURIList);
-        setProperty(CATALOG_PREFER, "system");
+          List<URI> catalogUriList = new ArrayList<>();
+
+          for (String uriString : catalogURIs) {
+              catalogUriList.add(URI.create(uriString));
+          }
+
+          CatalogResolver resolver = CatalogManager.catalogResolver(CatalogFeatures.defaults(),
+                  catalogUriList.toArray(new URI[catalogUriList.size()]));
+          //TODO: parser.setProperty(CATALOG_FILE, resolver);
+          //TODO: parser.setProperty(CATALOG_PREFER, "system");
+
+          if (schemaLocations != null) {
+            Logger.getInstance().debug("Setting schemaLocations property: " + schemaLocations);
+            parser.setProperty(PROPERTY_EXTERNAL_SCHEMA, schemaLocations);
+          }
       }
     }
     catch (SAXException exception) {
@@ -114,6 +125,13 @@ public class XMLCatalogParser extends SAXParser
 
   public XMLReader getXMLReader() throws SAXException {
     return reader;
+  }
+
+  public void parse(File file) throws SAXException, IOException {
+    // TODO: use XMLHandler class here?
+    DefaultHandler dh = new DefaultHandler();
+    InputSource is = new InputSource(file.toURI().toString());
+    parser.parse(is, dh);
   }
 
   public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
