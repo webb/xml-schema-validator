@@ -1689,8 +1689,10 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-# AC_PREFIX_DEFAULT($HOME)
-# AM_INIT_AUTOMAKE([-Wall -Werror gnu])
+
+if test "x$prefix" = "xNONE"
+then as_fn_error $? "\$prefix is unset. Set with --prefix=\${install root directory}" "$LINENO" 5
+fi
 
 # Checks for programs.
 ac_aux_dir=

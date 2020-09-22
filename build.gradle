@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
+    compile 'xerces:xercesImpl:2.11.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.slf4j:slf4j-simple:1.7.7'
     compile 'org.slf4j:slf4j-ext:1.7.7'

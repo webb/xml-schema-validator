@@ -27,18 +27,18 @@ SHELL = @bash@ -o pipefail -o errexit -o nounset
 #############################################################################
 
 #HELP:Build for @PACKAGE_NAME@ (@PACKAGE_TARNAME@)
+# autoconf / configure standard things
 
 srcdir = @srcdir@
 builddir = @builddir@
 prefix = @prefix@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-
-# commands
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_DATA = @INSTALL_DATA@
 MKDIR_P = @MKDIR_P@
+SED = @SED@
 
 gradle = @gradle@
 find = @find@
@@ -90,7 +90,7 @@ ${all_dir}/%: ${srcdir}/src/%
 
 #############################################################################
 
-.PHONY: install #  Put everything in the install locations
+.PHONY: install #  Put everything in the install locations (default @prefix@)
 install: ${install_files}
 
 ${prefix}/bin/%: ${all_dir}/bin/%

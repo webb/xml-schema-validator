@@ -4,8 +4,10 @@
 AC_PREREQ([2.69])
 AC_INIT([XML Schema Validator], [0], [https://github.com/webb/xml-schema-validator/issues], [xml-schema-validator], [https://github.com/webb/xml-schema-validator])
 AC_COPYRIGHT
-# AC_PREFIX_DEFAULT($HOME)
-# AM_INIT_AUTOMAKE([-Wall -Werror gnu])
+
+if test "x$prefix" = "xNONE"
+then AC_MSG_ERROR([\$prefix is unset. Set with --prefix=\${install root directory}])
+fi
 
 # Checks for programs.
 AC_PROG_INSTALL
